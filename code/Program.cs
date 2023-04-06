@@ -13,34 +13,62 @@ namespace code
             Console.WriteLine("Enter number:");
             int num = Convert.ToInt32(Console.ReadLine());
 
-            List<int> list = new List<int>();
+            List<int> nums = new List<int>();
+            for (int i = 0; i < num.ToString().Length; i++)
+            {
+                nums.Add(Convert.ToInt32(num.ToString().Substring(i, 1)));
+            }
 
-            int k1 = Convert.ToString(num).Length;
+            List<string> list = new List<string>(); // get all combinations
+            GetAllCombinations(list, nums);
+            //for (int i = 0; i < list.Count; i++)
+            //{
+            //    Console.WriteLine(list[i]);
+            //}
 
-            //getS(num.ToString(), k1);
+            for (int i = 0; i < list.Count; i++) // delete all numbers that start with zero or less than num
+            {
+                try
+                {
+                    if (list[i][0] == '0' || Convert.ToInt32(list[i]) <= num)
+                    {
+                        list.RemoveAt(i);
+                        i--;
+                    }
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+            }
+
+            int closest = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if ((closest == 0 && Convert.ToInt32(list[i]) > num) || (closest != 0 && Convert.ToInt32(list[i]) > num && Convert.ToInt32(list[i]) < closest))
+                {
+                    closest = Convert.ToInt32(list[i]);
+                }
+            }
+            Console.WriteLine($"Output: {closest}");
+
 
             Console.ReadLine();
 
-            //void getS(string s, int k) 
-            //{
-            //    if (k == 1)
-            //    {
-            //        list.Add(Convert.ToInt32(s));
-            //    }
-            //    else 
-            //    {
-            //        for (int i = 0; i < 3; i++)
-            //        {
-            //            getS(s, k - 1);
-            //            if (k % 2 == 0)
-            //            {
-            //                char s2 = s[i];
-            //                s[i-1] = s2;
-
-            //            }
-            //        }
-            //    }
-            //}
+            void GetAllCombinations<T>(IList<string> array, IList< T> arr, string current = "")
+            {
+                if (arr.Count == 0) 
+                {
+                    array.Add(current);
+                    return;
+                }
+                for (int i = 0; i < arr.Count; i++) 
+                {
+                    List<T> lst = new List<T>(arr);
+                    lst.RemoveAt(i);
+                    GetAllCombinations(array, lst, current + arr[i].ToString());
+                }
+            }
         }
     }
 }
